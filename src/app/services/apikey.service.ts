@@ -43,7 +43,7 @@ export class ApikeyService {
       'Authorization': `Bearer ${token}`
     });
     // return this.http.get(`https://localhost:7232/protected/hello/${ip}` ,{headers: header});
-    return this.http.get(`https://romigas369.bsite.net/protected/hello${ip}` ,{headers: header});
+    return this.http.get(`https://romigas369.bsite.net/protected/hello/${ip}` ,{headers: header});
   }
   GetIP(){
     return this.http.get(`https://api.ipify.org/?format=json`);

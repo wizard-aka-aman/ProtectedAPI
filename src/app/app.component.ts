@@ -29,7 +29,7 @@ export class AppComponent {
 
   constructor(private svc: ApikeyService) {}
 
-  async create() { 
+   create() { 
 
     const dto = {
       name: this.name,
@@ -38,11 +38,13 @@ export class AppComponent {
     
     this.isCreating = true;
     if(dto.allowedIps.length == 0){
-       await this.svc.GetIP().subscribe(
+        this.svc.GetIP().subscribe(
         (res: any) => {
           console.log(res);
           this.userLoggedInIp = res.ip;
           dto.allowedIps.push(res.ip);
+    console.log(dto);
+
           this.svc.create(dto).subscribe(
       res => {
         this.created = res;
@@ -80,7 +82,6 @@ export class AppComponent {
     );
     }
 
-    console.log(dto);
     
     
     
