@@ -37,12 +37,15 @@ export class ApikeyService {
     return this.http.get(`https://romigas369.bsite.net/public/verify/${id}`,{headers: header});
     // return this.http.get(`https://localhost:7232/public/verify/${id}`,{headers: header});
   }
-  getHello(token:string){
+  getHello(token:string,ip:string){
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    // return this.http.get('https://localhost:7232/protected/hello' ,{headers: header});
-    return this.http.get('https://romigas369.bsite.net/protected/hello' ,{headers: header});
+    // return this.http.get(`https://localhost:7232/protected/hello/${ip}` ,{headers: header});
+    return this.http.get(`https://romigas369.bsite.net/protected/hello${ip}` ,{headers: header});
+  }
+  GetIP(){
+    return this.http.get(`https://api.ipify.org/?format=json`);
   }
 }

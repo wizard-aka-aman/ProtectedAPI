@@ -25,9 +25,11 @@ export class AppComponent {
   showTestSection = false;
   copiedToken = false;
 
+  userLoggedInIp :string= ''
+
   constructor(private svc: ApikeyService) {}
 
-  create() { 
+  async create() { 
 
     const dto = {
       name: this.name,
@@ -35,8 +37,13 @@ export class AppComponent {
     };
     
     this.isCreating = true;
-    
-    this.svc.create(dto).subscribe(
+    if(dto.allowedIps.length == 0){
+       await this.svc.GetIP().subscribe(
+        (res: any) => {
+          console.log(res);
+          this.userLoggedInIp = res.ip;
+          dto.allowedIps.push(res.ip);
+          this.svc.create(dto).subscribe(
       res => {
         this.created = res;
         this.verifyApiId = res.id;
@@ -49,6 +56,34 @@ export class AppComponent {
         this.isCreating = false;
       }
     );
+        },
+        err => {
+          console.error(err);
+          // alert('Error getting IP');
+          this.isCreating = false;
+        }
+      );
+    }else{
+
+     this.svc.create(dto).subscribe(
+      res => {
+        this.created = res;
+        this.verifyApiId = res.id;
+        this.showVerifySection = true;
+        this.isCreating = false;
+      },
+      err => {
+        console.error(err);
+        alert('Error creating API key');
+        this.isCreating = false;
+      }
+    );
+    }
+
+    console.log(dto);
+    
+    
+    
   }
 
   verify() {
@@ -83,14 +118,14 @@ export class AppComponent {
 
     this.isTesting = true;
     
-    this.svc.getHello(this.allowedIPToken).subscribe(
+    this.svc.getHello(this.allowedIPToken,this.userLoggedInIp).subscribe(
       (res: any) => {
         console.log(res);
         this.displayHello = res;
         this.isTesting = false;
       },
       err => {
-        console.error(err);
+        console.log(err);
         alert('Error testing API');
         this.isTesting = false;
       }
